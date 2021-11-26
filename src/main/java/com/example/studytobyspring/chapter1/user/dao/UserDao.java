@@ -11,11 +11,8 @@ public class UserDao {
     // 리소스 작업 닫기
     // 예외 처리
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:h2:tcp://localhost/~/test", "sa", ""
-        );
-        PreparedStatement ps = c.prepareStatement("insert into user(id, name, password) values (?,?,?)");
+        Connection c = getConnection();
+        PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
         ps.setString(1, user.getId());
         ps.setString(2, user.getName());
         ps.setString(3, user.getPassword());
@@ -27,11 +24,9 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:h2:tcp://localhost/~/test", "sa", ""
-        );
-        PreparedStatement ps = c.prepareStatement("select * from user where id = ?");
+        Connection c = getConnection();
+
+        PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
 
         ResultSet rs = ps.executeQuery();
@@ -41,12 +36,19 @@ public class UserDao {
         User user = new User();
         user.setId(rs.getString("id"));
         user.setName(rs.getString("name"));
-        user.setName(rs.getString("password"));
+        user.setPassword(rs.getString("password"));
         
         rs.close();
         ps.close();
         c.close();
 
         return user;
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("org.h2.Driver");
+        return DriverManager.getConnection(
+                "jdbc:h2:tcp://localhost/~/test", "sa", ""
+        );
     }
 }
