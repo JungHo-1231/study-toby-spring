@@ -4,11 +4,14 @@ import com.example.studytobyspring.chapter1.user.domain.User;
 
 import java.sql.*;
 
-public abstract class UserDao {
-    // db 연결
-    // sql 실행
-    // 리소스 작업 닫기
-    // 예외 처리
+public class UserDao {
+
+    private ConnectionMaker simpleConnectionMaker;
+
+    public UserDao(ConnectionMaker simpleConnectionMaker) {
+        this.simpleConnectionMaker = simpleConnectionMaker;
+    }
+
     public void add(User user) throws ClassNotFoundException, SQLException {
         Connection c = getConnection();
         PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
@@ -44,5 +47,7 @@ public abstract class UserDao {
         return user;
     }
 
-    public abstract Connection getConnection() throws ClassNotFoundException, SQLException ;
+    public Connection getConnection() throws ClassNotFoundException, SQLException {
+        return simpleConnectionMaker.makeConnection();
+    };
 }
