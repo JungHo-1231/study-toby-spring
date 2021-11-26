@@ -4,8 +4,7 @@ import com.example.studytobyspring.chapter1.user.domain.User;
 
 import java.sql.*;
 
-// 초난감 Dao
-public class UserDao {
+public abstract class UserDao {
     // db 연결
     // sql 실행
     // 리소스 작업 닫기
@@ -45,10 +44,5 @@ public class UserDao {
         return user;
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.Driver");
-        return DriverManager.getConnection(
-                "jdbc:h2:tcp://localhost/~/test", "sa", ""
-        );
-    }
+    public abstract Connection getConnection() throws ClassNotFoundException, SQLException ;
 }
