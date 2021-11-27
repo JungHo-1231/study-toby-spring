@@ -5,25 +5,26 @@ import com.example.studytobyspring.chapter1.user.dao.UserDao;
 import com.example.studytobyspring.chapter1.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SpringJUnitConfig(DaoFactory.class)
 public class UserDaoTest {
 
     private UserDao userDao;
 
-    @BeforeEach
-    public void setUp() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        userDao = context.getBean("userDao", UserDao.class);
-    }
+    @Autowired
+    private ApplicationContext context;
 
     @Test
     void addAndGet() throws Exception {
+        userDao = context.getBean("userDao", UserDao.class);
 
         userDao.deleteAll();
 
@@ -45,6 +46,7 @@ public class UserDaoTest {
 
     @Test
     void count() throws Exception {
+        userDao = context.getBean("userDao", UserDao.class);
         userDao.deleteAll();
 
         User user1 = new User("gyumee", "박상철", "springno1");
@@ -72,6 +74,7 @@ public class UserDaoTest {
 
     @Test()
     void getUserFailure() throws Exception {
+        userDao = context.getBean("userDao", UserDao.class);
 
         userDao.deleteAll();
 
@@ -80,6 +83,7 @@ public class UserDaoTest {
 
     @Test
     void deleteUser() throws Exception {
+        userDao = context.getBean("userDao", UserDao.class);
         // 의존관계 주입
 
         User user = new User("123", "456", "jung");
