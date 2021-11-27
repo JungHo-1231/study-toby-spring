@@ -4,26 +4,19 @@ import com.example.studytobyspring.chapter1.user.domain.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class UserDao {
 
-    private ConnectionMaker simpleConnectionMaker;
+    private DataSource dataSource;
 
-    // 의존 관계 주입
-    public UserDao(ConnectionMaker simpleConnectionMaker) {
-        this.simpleConnectionMaker = simpleConnectionMaker;
-    }
-
-    // 의존 관계 검색
-    public UserDao() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        ConnectionMaker connectionMake = context.getBean("connectionMake", ConnectionMaker.class);
-        this.simpleConnectionMaker = connectionMake;
+    public UserDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
         ps.setString(1, user.getId());
         ps.setString(2, user.getName());
@@ -36,7 +29,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c =  dataSource.getConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
@@ -57,7 +50,7 @@ public class UserDao {
         return user;
     }
     public void deleteUser(String id) throws SQLException, ClassNotFoundException {
-        Connection c = getConnection();
+        Connection c = dataSource.getConnection();
 
         PreparedStatement ps = c.prepareStatement("delete from users where id = ? ");
         ps.setString(1, id);
@@ -67,10 +60,5 @@ public class UserDao {
         ps.close();
         c.close();
     }
-
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        return simpleConnectionMaker.makeConnection();
-    };
-
 
 }
