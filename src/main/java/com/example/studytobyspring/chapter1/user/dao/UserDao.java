@@ -28,16 +28,14 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c =  dataSource.getConnection();
+        Connection c = dataSource.getConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
 
         ResultSet rs = ps.executeQuery();
 
-        rs.next();
-
-        User user = null;
+        User user = new User();
 
         if (rs.next()) {
             user.setId(rs.getString("id"));
@@ -49,7 +47,8 @@ public class UserDao {
         ps.close();
         c.close();
 
-        if (user == null) throw new EmptyResultDataAccessException(1);
+
+        if (user.getId() == null || user.getId().equals("")) throw new EmptyResultDataAccessException(1);
 
         return user;
     }

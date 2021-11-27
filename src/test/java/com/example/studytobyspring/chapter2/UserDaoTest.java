@@ -3,8 +3,9 @@ package com.example.studytobyspring.chapter2;
 import com.example.studytobyspring.chapter1.user.dao.DaoFactory;
 import com.example.studytobyspring.chapter1.user.dao.UserDao;
 import com.example.studytobyspring.chapter1.user.domain.User;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,21 +14,23 @@ import static org.assertj.core.api.Assertions.*;
 
 public class UserDaoTest {
 
+    private UserDao userDao;
+
+    @BeforeEach
+    public void setUp() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        userDao = context.getBean("userDao", UserDao.class);
+    }
+
     @Test
     void addAndGet() throws Exception {
-        // 의존관계 주입
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDao", UserDao.class);
 
         userDao.deleteAll();
 
         assertThat(userDao.getCount()).isEqualTo(0);
 
         // 테스트 코드...
-        User user = new User();
-        user.setId("123");
-        user.setPassword("456");
-        user.setName("jung");
+        User user = new User("123", "456", "jung");
         userDao.add(user);
 
         assertThat(userDao.getCount()).isEqualTo(1);
@@ -42,9 +45,7 @@ public class UserDaoTest {
 
     @Test
     void count() throws Exception {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDao", UserDao.class);
-
+        userDao.deleteAll();
 
         User user1 = new User("gyumee", "박상철", "springno1");
         User user2 = new User("lee", "이길원", "springno2");
@@ -68,10 +69,9 @@ public class UserDaoTest {
         assertThat(findUser1.getPassword()).isEqualTo(user1.getPassword());
     }
 
+
     @Test()
     void getUserFailure() throws Exception {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDao", UserDao.class);
 
         userDao.deleteAll();
 
@@ -81,12 +81,8 @@ public class UserDaoTest {
     @Test
     void deleteUser() throws Exception {
         // 의존관계 주입
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDao", UserDao.class);
-        User user = new User();
-        user.setId("123");
-        user.setPassword("456");
-        user.setName("jung");
+
+        User user = new User("123", "456", "jung");
         userDao.deleteUser(user.getId());
     }
 }

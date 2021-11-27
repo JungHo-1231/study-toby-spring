@@ -2,11 +2,9 @@ package com.example.studytobyspring.chapter1.user.domain;
 
 import lombok.*;
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 @ToString @AllArgsConstructor
-@NoArgsConstructor
 public class User {
-
     String id;
     String name;
     String password;
