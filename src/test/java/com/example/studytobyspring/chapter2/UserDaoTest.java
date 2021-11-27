@@ -17,14 +17,11 @@ import static org.assertj.core.api.Assertions.*;
 @SpringJUnitConfig(DaoFactory.class)
 public class UserDaoTest {
 
-    private UserDao userDao;
-
     @Autowired
-    private ApplicationContext context;
+    private UserDao userDao;
 
     @Test
     void addAndGet() throws Exception {
-        userDao = context.getBean("userDao", UserDao.class);
 
         userDao.deleteAll();
 
@@ -46,7 +43,6 @@ public class UserDaoTest {
 
     @Test
     void count() throws Exception {
-        userDao = context.getBean("userDao", UserDao.class);
         userDao.deleteAll();
 
         User user1 = new User("gyumee", "박상철", "springno1");
@@ -74,7 +70,6 @@ public class UserDaoTest {
 
     @Test()
     void getUserFailure() throws Exception {
-        userDao = context.getBean("userDao", UserDao.class);
 
         userDao.deleteAll();
 
@@ -83,7 +78,6 @@ public class UserDaoTest {
 
     @Test
     void deleteUser() throws Exception {
-        userDao = context.getBean("userDao", UserDao.class);
         // 의존관계 주입
 
         User user = new User("123", "456", "jung");
