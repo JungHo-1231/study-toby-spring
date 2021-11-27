@@ -49,6 +49,7 @@ public class UserDao {
 
         return user;
     }
+
     public void deleteUser(String id) throws SQLException, ClassNotFoundException {
         Connection c = dataSource.getConnection();
 
@@ -60,5 +61,6 @@ public class UserDao {
         ps.close();
         c.close();
     }
+
 
 }
