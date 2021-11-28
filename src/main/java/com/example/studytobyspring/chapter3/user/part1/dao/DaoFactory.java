@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chapter3.user.dao;
+package com.example.studytobyspring.chapter3.user.part1.dao;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

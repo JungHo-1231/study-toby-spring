@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chapter3.user.dao;
+package com.example.studytobyspring.chapter3.user.part1.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

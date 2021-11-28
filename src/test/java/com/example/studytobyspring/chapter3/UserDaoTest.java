@@ -1,8 +1,8 @@
 package com.example.studytobyspring.chapter3;
 
 import com.example.studytobyspring.chapter1.user.domain.User;
-import com.example.studytobyspring.chapter3.user.dao.DaoFactory;
-import com.example.studytobyspring.chapter3.user.dao.UserDao;
+import com.example.studytobyspring.chapter3.user.part1.dao.DaoFactory;
+import com.example.studytobyspring.chapter3.user.part1.dao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
