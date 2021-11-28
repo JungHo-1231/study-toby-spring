@@ -1,16 +1,27 @@
 package com.example.studytobyspring.chapter3.learningtest.template;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
 
 public class CalcSumTest {
 
+    public static final String PATH = "/Users/jh/IdeaProjects/study-toby-spring/src/test/java/com/example/studytobyspring/chapter3/learningtest/template/number.txt";
+    Calculator calculator;
+
+    @BeforeEach
+    void setUp() {
+        calculator = new Calculator();
+    }
+
     @Test
     void sumOfNumbers() throws Exception{
-        Calculator calculator = new Calculator();
-        String path = "/Users/jh/IdeaProjects/study-toby-spring/src/test/java/com/example/studytobyspring/chapter3/learningtest/template/number.txt";
-        int sum = calculator.calcSum(path);
-        Assertions.assertThat(sum).isEqualTo(10);
+        Assertions.assertThat(calculator.calcSum(PATH)).isEqualTo(10);
     }
+
+    @Test
+    void multiplyOfNumbers() throws Exception{
+        Assertions.assertThat(calculator.calMultiply(PATH)).isEqualTo(24);
+    }
+
 }
