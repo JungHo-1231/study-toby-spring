@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.*;
+
 public class CalcSumTest {
 
     public static final String PATH = "/Users/jh/IdeaProjects/study-toby-spring/src/test/java/com/example/studytobyspring/chapter3/learningtest/template/number.txt";
@@ -16,12 +18,16 @@ public class CalcSumTest {
 
     @Test
     void sumOfNumbers() throws Exception{
-        Assertions.assertThat(calculator.calcSum(PATH)).isEqualTo(10);
+        assertThat(calculator.calcSum(PATH)).isEqualTo(10);
     }
 
     @Test
     void multiplyOfNumbers() throws Exception{
-        Assertions.assertThat(calculator.calMultiply(PATH)).isEqualTo(24);
+        assertThat(calculator.calMultiply(PATH)).isEqualTo(24);
     }
 
+    @Test
+    void sumOfNumberWithLineCallback() throws Exception{
+        assertThat(calculator.calcSumWithLineCallback(PATH)).isEqualTo(10);
+    }
 }
