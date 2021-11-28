@@ -33,6 +33,6 @@ public class CalcSumTest {
 
     @Test
     void concatenate() throws Exception{
-        assertThat(calculator.concatenate(PATH)).isEqualTo("1234");i
+        assertThat(calculator.concatenate(PATH)).isEqualTo("1234");
     }
 }
