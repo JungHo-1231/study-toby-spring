@@ -1,14 +1,15 @@
-package com.example.studytobyspring.chapter2;
+package com.example.studytobyspring.chapter3;
 
-import com.example.studytobyspring.chapter1.user.dao.DaoFactory;
-import com.example.studytobyspring.chapter1.user.dao.UserDao;
 import com.example.studytobyspring.chapter1.user.domain.User;
+import com.example.studytobyspring.chapter3.user.dao.DaoFactory;
+import com.example.studytobyspring.chapter3.user.dao.UserDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig(DaoFactory.class)
 public class UserDaoTest {
