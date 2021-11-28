@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Calculator {
 
     public int calcSumWithLineCallback(String filepath) throws IOException {
-        LineCallback sumCallback = new LineCallback() {
+        LineCallback<Integer> sumCallback = new LineCallback<Integer>() {
             @Override
             public Integer doSomethingWithLine(String line, Integer value) {
                 return value + Integer.valueOf(line);
@@ -17,12 +17,22 @@ public class Calculator {
         return lineReadTemplate(filepath, sumCallback, 0);
     }
 
+    public String concatenate(String filepath) throws IOException {
+        LineCallback<String> sumCallback = new LineCallback<String>() {
+            @Override
+            public String doSomethingWithLine(String line, String value) {
+                return value + line;
+            }
+        };
 
-    public Integer lineReadTemplate(String filepath, LineCallback callback, int intival) throws IOException {
+        return lineReadTemplate(filepath, sumCallback, "");
+    }
+
+    public <T> T lineReadTemplate(String filepath, LineCallback<T> callback, T intival) throws IOException {
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(filepath));
-            Integer res = intival;
+            T res = intival;
             String line = null;
             while ((line = br.readLine()) != null) {
                 res =  callback.doSomethingWithLine(line, res);

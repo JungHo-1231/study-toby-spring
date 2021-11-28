@@ -30,4 +30,9 @@ public class CalcSumTest {
     void sumOfNumberWithLineCallback() throws Exception{
         assertThat(calculator.calcSumWithLineCallback(PATH)).isEqualTo(10);
     }
+
+    @Test
+    void concatenate() throws Exception{
+        assertThat(calculator.concatenate(PATH)).isEqualTo("1234");i
+    }
 }
