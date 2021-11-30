@@ -1,12 +1,9 @@
 package com.example.studytobyspring.chapter3.user.part3.dao;
 
 import com.example.studytobyspring.chapter1.user.domain.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.*;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +11,12 @@ import java.util.List;
 public class UserDao {
 
     private JdbcTemplate jdbcTemplate;
+    private RowMapper<User> rowMapper = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
+        }
+    };
 
     public UserDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -35,12 +38,7 @@ public class UserDao {
 
     public User get(String id) {
         return jdbcTemplate.queryForObject("select * from users  where id = ?",
-                new RowMapper<User>() {
-                    @Override
-                    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
-                    }
-                },
+                rowMapper,
                 new Object[]{id}
         );
     }
@@ -50,8 +48,6 @@ public class UserDao {
     }
 
     public List<User> getAll() {
-        return jdbcTemplate.query("select * from users order by id",
-                (rs, rowNum) -> new User(rs.getString("id"), rs.getString("name"), rs.getString("password"))
-        );
+        return jdbcTemplate.query("select * from users order by id", rowMapper);
     }
 }
