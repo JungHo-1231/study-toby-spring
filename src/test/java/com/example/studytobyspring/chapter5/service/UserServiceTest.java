@@ -10,9 +10,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 class UserServiceTest {
     @Autowired
     UserService userService;
-
+    
     @Test
     void bean() throws Exception{
         Assertions.assertThat(userService).isNotNull();
-    }
+    } 
 }
