@@ -1,5 +1,8 @@
-package com.example.studytobyspring.chapter5.dao;
+package com.example.studytobyspring.chapter5.config;
 
+import com.example.studytobyspring.chapter5.dao.UserDao;
+import com.example.studytobyspring.chapter5.dao.UserDaoJdbc;
+import com.example.studytobyspring.chapter5.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -7,11 +10,17 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-public class DaoFactory {
+public class Config {
 
     @Bean
     public UserDao userDao(){
         return new UserDaoJdbc(connectionMaker());
+    }
+
+    @Bean
+    public UserService userService(){
+        return new UserService(userDao());
+
     }
 
     @Bean
