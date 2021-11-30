@@ -1,7 +1,7 @@
 package com.example.studytobyspring.chapter5.dao;
 
-import com.example.studytobyspring.chapter1.user.domain.User;
 import com.example.studytobyspring.chapter4.DuplicateUserException;
+import com.example.studytobyspring.chapter5.doamin.User;
 import org.h2.api.ErrorCode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,52 +17,29 @@ public class UserDaoJdbc implements UserDao {
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
     private RowMapper<User> userMapper
-            = (rs, rowNum) -> new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
+            = (rs, rowNum) -> new User(
+            rs.getString("id"),
+            rs.getString("name"),
+            rs.getString("password"),
+            Level.valueOf(rs.getInt("level")),
+            rs.getInt("login"),
+            rs.getInt("recommend")
+    );
 
     public UserDaoJdbc(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         this.dataSource = dataSource;
     }
 
-//    public void add(final User user) throws DuplicateUserIdException {
-//        try (
-//                Connection c = dataSource.getConnection();
-//                final PreparedStatement ps = c.prepareStatement("insert into users (id, name, password) values (?,?,?)")
-//
-//        ) {
-//            ps.setString(1, user.getId());
-//            ps.setString(2, user.getName());
-//            ps.setString(3, user.getPassword());
-//
-//            ps.executeUpdate();
-//        } catch (SQLException e) {
-//            if (e.getErrorCode() == ErrorCode.DUPLICATE_COLUMN_NAME_1) {
-//                throw new DuplicateUserIdException(e); // 예외 전환
-//            } else {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-
-
     public void add(final User user) throws DuplicateUserException {
-        try (
-                Connection c = dataSource.getConnection();
-                final PreparedStatement ps = c.prepareStatement("insert into users (id, name, password) values (?,?,?)")
-
-        ) {
-            ps.setString(1, user.getId());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getPassword());
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == ErrorCode.DUPLICATE_COLUMN_NAME_1) {
-                throw new DuplicateUserException(e); // 예외 전환
-            } else {
-                throw new RuntimeException(e);
-            }
-        }
+        jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values (?,?,?,?,?,?)",
+                user.getId(),
+                user.getName(),
+                user.getPassword(),
+                user.getLevel().getValue(),
+                user.getLogin(),
+                user.getRecommend()
+        );
     }
 
 
@@ -76,7 +53,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     public User get(String id) {
-        return jdbcTemplate.queryForObject("select * from users  where id = ?",
+        return jdbcTemplate.queryForObject("select * from users where id = ?",
                 userMapper,
                 new Object[]{id}
         );

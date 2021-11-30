@@ -1,6 +1,7 @@
 package com.example.studytobyspring.chapter5.dao;
 
-import com.example.studytobyspring.chapter1.user.domain.User;
+
+import com.example.studytobyspring.chapter5.doamin.User;
 
 import java.util.List;
 
