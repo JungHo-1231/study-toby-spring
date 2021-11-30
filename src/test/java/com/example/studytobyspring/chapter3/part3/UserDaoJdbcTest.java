@@ -3,22 +3,40 @@ package com.example.studytobyspring.chapter3.part3;
 import com.example.studytobyspring.chapter1.user.domain.User;
 import com.example.studytobyspring.chapter3.user.part3.dao.DaoFactory;
 import com.example.studytobyspring.chapter3.user.part3.dao.UserDao;
-import org.assertj.core.api.Assertions;
+import com.example.studytobyspring.chapter4.DuplicateUserException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig(DaoFactory.class)
-public class UserDaoTest {
+public class UserDaoJdbcTest {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private DataSource dataSource;
+
+    @Test
+    void duplicateKey() throws Exception{
+        userDao.deleteAll();
+        User user = new User("id", "name", "password");
+
+        userDao.add(user);
+
+        assertThatThrownBy(()-> {
+            userDao.add(user);
+        }).isInstanceOf(DataAccessException.class);
+    }
 
     @Test
     void addUser() throws Exception{

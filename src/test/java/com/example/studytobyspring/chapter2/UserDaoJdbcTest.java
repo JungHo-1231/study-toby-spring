@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringJUnitConfig(DaoFactory.class)
-public class UserDaoTest {
+public class UserDaoJdbcTest {
 
     @Autowired
     private UserDao userDao;

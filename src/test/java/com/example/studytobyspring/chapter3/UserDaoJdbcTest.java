@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig(DaoFactory.class)
-public class UserDaoTest {
+public class UserDaoJdbcTest {
 
     @Autowired
     private UserDao userDao;

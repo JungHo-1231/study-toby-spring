@@ -11,12 +11,8 @@ import java.util.List;
 public class UserDao {
 
     private JdbcTemplate jdbcTemplate;
-    private RowMapper<User> rowMapper = new RowMapper<User>() {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
-        }
-    };
+    private RowMapper<User> userMapper
+            = (rs, rowNum) -> new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
 
     public UserDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -38,7 +34,7 @@ public class UserDao {
 
     public User get(String id) {
         return jdbcTemplate.queryForObject("select * from users  where id = ?",
-                rowMapper,
+                userMapper,
                 new Object[]{id}
         );
     }
@@ -48,6 +44,6 @@ public class UserDao {
     }
 
     public List<User> getAll() {
-        return jdbcTemplate.query("select * from users order by id", rowMapper);
+        return jdbcTemplate.query("select * from users order by id", userMapper);
     }
 }
