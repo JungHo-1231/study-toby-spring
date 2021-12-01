@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
@@ -32,6 +33,8 @@ class UserServiceTest {
     UserDao userDao;
     @Autowired
     DataSource dataSource;
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
 
     @BeforeEach
@@ -88,7 +91,7 @@ class UserServiceTest {
 
     @Test
     void upgradeAllOrNothing() throws Exception{
-        TestUserService testUserService = new TestUserService(userDao,dataSource, users.get(3).getId());
+        TestUserService testUserService = new TestUserService(userDao,transactionManager, users.get(3).getId());
 
         userDao.deleteAll();
 
@@ -120,8 +123,8 @@ class UserServiceTest {
     static class TestUserService extends UserService {
         private  String id;
 
-        public TestUserService(UserDao userDao, DataSource dataSource , String id) {
-            super(userDao, dataSource);
+        public TestUserService(UserDao userDao, PlatformTransactionManager platformTransactionManager, String id) {
+            super(userDao, platformTransactionManager);
             this.id = id;
         }
 

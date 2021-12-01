@@ -5,7 +5,9 @@ import com.example.studytobyspring.chapter5.dao.UserDaoJdbc;
 import com.example.studytobyspring.chapter5.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -18,8 +20,13 @@ public class Config {
     }
 
     @Bean
+    public PlatformTransactionManager transactionManager(){
+        return new DataSourceTransactionManager(connectionMaker());
+    }
+
+    @Bean
     public UserService userService(){
-        return new UserService(userDao(), connectionMaker());
+        return new UserService(userDao(),  transactionManager());
     }
 
     @Bean

@@ -3,7 +3,11 @@ package com.example.studytobyspring.chapter5.service;
 import com.example.studytobyspring.chapter5.dao.Level;
 import com.example.studytobyspring.chapter5.dao.UserDao;
 import com.example.studytobyspring.chapter5.doamin.User;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.sql.DataSource;
@@ -14,20 +18,17 @@ import java.util.List;
 public class UserService {
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECCOMEND_FOR_GOLD = 30;
-    UserDao userDao;
-    DataSource dataSource;
+    private UserDao userDao;
+    private PlatformTransactionManager transactionManager;
 
-    public UserService(UserDao userDao, DataSource dataSource) {
+
+    public UserService(UserDao userDao, PlatformTransactionManager transactionManager) {
         this.userDao = userDao;
-        this.dataSource = dataSource;
+        this.transactionManager = transactionManager;
     }
 
     public void upgradeLevels() throws SQLException {
-
-        TransactionSynchronizationManager.initSynchronization();
-        Connection c = DataSourceUtils.getConnection(dataSource);
-        c.setAutoCommit(false);
-
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try {
             List<User> users = userDao.getAll();
 
@@ -36,22 +37,14 @@ public class UserService {
                     upgradeLevel(user);
                 }
             }
-            c.commit();
-
+            transactionManager.commit(status);
         } catch (Exception e) {
-            c.rollback();
+            transactionManager.rollback(status);
             throw e;
-
-        } finally {
-            DataSourceUtils.releaseConnection(c, dataSource);
-            TransactionSynchronizationManager.unbindResource(this.dataSource);
-            TransactionSynchronizationManager.clearSynchronization();
         }
     }
 
     protected void upgradeLevel(User user) {
-//      리팩토링 후
-//      user 의 업데이트 책임을 user 가 스스로 책임지게 함
         user.upgradeLevel();
         userDao.update(user);
     }
