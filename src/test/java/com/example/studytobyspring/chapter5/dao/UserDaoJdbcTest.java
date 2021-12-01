@@ -49,9 +49,7 @@ public class UserDaoJdbcTest {
         userDao.update(user1);
 
         User user1Update = userDao.get(user1.getId());
-        checkSameUser(user1, user1Update);
-
-        User user2same = userDao.get(user2.getId());
+        checkSameUser(user1, user1Update); User user2same = userDao.get(user2.getId());
         checkSameUser(user2, user2same);
     }
 
