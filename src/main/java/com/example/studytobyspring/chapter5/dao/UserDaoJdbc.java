@@ -36,7 +36,7 @@ public class UserDaoJdbc implements UserDao {
                 user.getId(),
                 user.getName(),
                 user.getPassword(),
-                user.getLevel().getValue(),
+                user.getLevel().intValue(),
                 user.getLogin(),
                 user.getRecommend()
         );
@@ -59,7 +59,7 @@ public class UserDaoJdbc implements UserDao {
 
                 user1.getName(),
                 user1.getPassword(),
-                user1.getLevel().getValue(),
+                user1.getLevel().intValue(),
                 user1.getLogin(),
                 user1.getRecommend(),
                 user1.getId()
