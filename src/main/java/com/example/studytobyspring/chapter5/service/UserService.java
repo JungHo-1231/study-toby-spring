@@ -49,13 +49,19 @@ public class UserService {
     }
 
     private void upgradeLevel(User user) {
-        Level currentLevel = user.getLevel();
+//        리팩토링 전
+//        Level currentLevel = user.getLevel();
+//
+//        if (currentLevel == Level.BASIC) {
+//            user.setLevel(Level.SILVER);
+//        } else if (currentLevel == Level.SILVER) {
+//            user.setLevel(Level.GOLD);
+//        }
+//        userDao.update(user);
 
-        if (currentLevel == Level.BASIC) {
-            user.setLevel(Level.SILVER);
-        } else if (currentLevel == Level.SILVER) {
-            user.setLevel(Level.GOLD);
-        }
+//      리팩토링 후
+        // user 의 업데이트 책임을 user 가 스스로 책임지게 함
+        user.upgradeLevel();
         userDao.update(user);
     }
 
