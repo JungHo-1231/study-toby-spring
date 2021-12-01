@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import javax.sql.DataSource;
+import javax.xml.crypto.Data;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +30,8 @@ class UserServiceTest {
     UserService userService;
     @Autowired
     UserDao userDao;
+    @Autowired
+    DataSource dataSource;
 
 
     @BeforeEach
@@ -84,7 +88,7 @@ class UserServiceTest {
 
     @Test
     void upgradeAllOrNothing() throws Exception{
-        TestUserService testUserService = new TestUserService(userDao, users.get(3).getId());
+        TestUserService testUserService = new TestUserService(userDao,dataSource, users.get(3).getId());
 
         userDao.deleteAll();
 
@@ -116,8 +120,8 @@ class UserServiceTest {
     static class TestUserService extends UserService {
         private  String id;
 
-        public TestUserService(UserDao userDao , String id) {
-            super(userDao);
+        public TestUserService(UserDao userDao, DataSource dataSource , String id) {
+            super(userDao, dataSource);
             this.id = id;
         }
 
