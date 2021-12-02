@@ -2,6 +2,7 @@ package com.example.studytobyspring.chapter5.config;
 
 import com.example.studytobyspring.chapter5.dao.UserDao;
 import com.example.studytobyspring.chapter5.dao.UserDaoJdbc;
+import com.example.studytobyspring.chapter5.service.DummyMailSender;
 import com.example.studytobyspring.chapter5.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,7 @@ public class Config {
     }
     @Bean
     public MailSender mailSender(){
-        return new JavaMailSenderImpl();
+        return new DummyMailSender();
     }
 
     @Bean
