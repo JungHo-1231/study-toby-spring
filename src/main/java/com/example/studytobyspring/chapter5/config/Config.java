@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -23,10 +25,14 @@ public class Config {
     public PlatformTransactionManager transactionManager(){
         return new DataSourceTransactionManager(connectionMaker());
     }
+    @Bean
+    public MailSender mailSender(){
+        return new JavaMailSenderImpl();
+    }
 
     @Bean
     public UserService userService(){
-        return new UserService(userDao(),  transactionManager());
+        return new UserService(userDao(),  transactionManager(), mailSender());
     }
 
     @Bean

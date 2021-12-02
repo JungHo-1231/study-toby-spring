@@ -29,9 +29,9 @@ public class UserDaoJdbcTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User("gyumee", "박상철", "springno1", Level.BASIC,1,0);
-        user2 = new User("lee", "이길원", "springno2", Level.SILVER, 55, 10);
-        user3 = new User("bun", "박범진", "springno3", Level.GOLD, 100, 40);
+        user1 = new User("gyumee", "박상철", "springno1", Level.BASIC,1,0, "email.com");
+        user2 = new User("lee", "이길원", "springno2", Level.SILVER, 55, 10, "email.com");
+        user3 = new User("bun", "박범진", "springno3", Level.GOLD, 100, 40 ,"email.com");
     }
 
     @Test
