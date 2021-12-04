@@ -14,4 +14,5 @@ public class DummyMailSender implements MailSender {
     public void send(SimpleMailMessage... simpleMessages) throws MailException {
 
     }
+
 }
