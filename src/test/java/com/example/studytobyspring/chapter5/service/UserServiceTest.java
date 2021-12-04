@@ -8,11 +8,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,16 +35,18 @@ class UserServiceTest {
     DataSource dataSource;
     @Autowired
     PlatformTransactionManager transactionManager;
+    @Autowired
+    MailSender mailSender;
 
 
     @BeforeEach
     void setUp() {
         users = Arrays.asList(
-                        new User("bumjin", "박범진", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER -1, 0),
-                        new User("joytouch", "강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
-                        new User("erwins", "신승한", "p3", Level.SILVER, 0, MIN_RECCOMEND_FOR_GOLD - 1),
-                        new User("madnite1", "이상호", "p4", Level.SILVER, 60,MIN_RECCOMEND_FOR_GOLD),
-                        new User("green", "오민규", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
+                        new User("bumjin", "박범진", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER -1, 0 , "email.com"),
+                        new User("joytouch", "강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0, "email.com"),
+                        new User("erwins", "신승한", "p3", Level.SILVER, 0, MIN_RECCOMEND_FOR_GOLD - 1, "email.com"),
+                        new User("madnite1", "이상호", "p4", Level.SILVER, 60,MIN_RECCOMEND_FOR_GOLD, "email.com"),
+                        new User("green", "오민규", "p5", Level.GOLD, 100, Integer.MAX_VALUE, "email.com")
                 );
     }
 
@@ -91,7 +93,7 @@ class UserServiceTest {
 
     @Test
     void upgradeAllOrNothing() throws Exception{
-        TestUserService testUserService = new TestUserService(userDao,transactionManager, users.get(3).getId());
+        TestUserService testUserService = new TestUserService(userDao,transactionManager, users.get(3).getId(), mailSender);
 
         userDao.deleteAll();
 
@@ -104,7 +106,6 @@ class UserServiceTest {
                 testUserService.upgradeLevels();
             }).isInstanceOf(TestUserService.TestUserServiceException.class);
         } catch (TestUserService.TestUserServiceException e) {
-
         }
 
         checkLevelUpgraded(users.get(1), false);
@@ -123,8 +124,8 @@ class UserServiceTest {
     static class TestUserService extends UserService {
         private  String id;
 
-        public TestUserService(UserDao userDao, PlatformTransactionManager platformTransactionManager, String id) {
-            super(userDao, platformTransactionManager);
+        public TestUserService(UserDao userDao, PlatformTransactionManager platformTransactionManager, String id, MailSender mailSender) {
+            super(userDao, platformTransactionManager, mailSender);
             this.id = id;
         }
 

@@ -1,15 +1,11 @@
-package com.example.studytobyspring.chapter5.dao;
+package com.example.studytobyspring.chapter6.dao;
 
 import com.example.studytobyspring.chapter4.DuplicateUserException;
-import com.example.studytobyspring.chapter5.doamin.User;
-import org.h2.api.ErrorCode;
+import com.example.studytobyspring.chapter6.doamin.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserDaoJdbc implements UserDao {
