@@ -8,13 +8,18 @@ import org.springframework.mail.SimpleMailMessage;
 
 import java.util.List;
 
-import static com.example.studytobyspring.chapter6.service.UserService1.MIN_LOGCOUNT_FOR_SILVER;
-import static com.example.studytobyspring.chapter6.service.UserService1.MIN_RECCOMEND_FOR_GOLD;
 
 public class UserServiceImpl implements UserService {
+    public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
+    public static final int MIN_RECCOMEND_FOR_GOLD = 30;
 
     UserDao userDao;
     MailSender mailSender;
+
+    public UserServiceImpl(UserDao userDao, MailSender mailSender) {
+        this.userDao = userDao;
+        this.mailSender = mailSender;
+    }
 
     @Override
     public void add(User user) {

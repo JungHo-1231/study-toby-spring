@@ -2,8 +2,7 @@ package com.example.studytobyspring.chapter6.config;
 
 import com.example.studytobyspring.chapter6.dao.UserDao;
 import com.example.studytobyspring.chapter6.dao.UserDaoJdbc;
-import com.example.studytobyspring.chapter6.service.DummyMailSender;
-import com.example.studytobyspring.chapter6.service.UserService1;
+import com.example.studytobyspring.chapter6.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -17,22 +16,23 @@ import javax.sql.DataSource;
 public class Config {
 
     @Bean
-    public UserDao userDao(){
+    public UserDao userDao() {
         return new UserDaoJdbc(connectionMaker());
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(){
+    public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(connectionMaker());
     }
+
     @Bean
-    public MailSender mailSender(){
+    public MailSender mailSender() {
         return new DummyMailSender();
     }
 
     @Bean
-    public UserService1 userService(){
-        return new UserService1(userDao(),  transactionManager(), mailSender());
+    public UserService userService() {
+        return new UserServiceTx(new UserServiceImpl(userDao(), mailSender()), transactionManager());
     }
 
     @Bean
