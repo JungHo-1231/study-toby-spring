@@ -1,11 +1,12 @@
-package com.example.studytobyspring.chapter6.part1.config;
+package com.example.studytobyspring.chapter6.part2.config;
 
-import com.example.studytobyspring.chapter6.part1.dao.UserDao;
-import com.example.studytobyspring.chapter6.part1.dao.UserDaoJdbc;
-import com.example.studytobyspring.chapter6.part1.service.DummyMailSender;
-import com.example.studytobyspring.chapter6.part1.service.UserService;
-import com.example.studytobyspring.chapter6.part1.service.UserServiceImpl;
-import com.example.studytobyspring.chapter6.part1.service.UserServiceTx;
+import com.example.studytobyspring.chapter6.part2.bean.MessageFactoryBean;
+import com.example.studytobyspring.chapter6.part2.dao.UserDao;
+import com.example.studytobyspring.chapter6.part2.dao.UserDaoJdbc;
+import com.example.studytobyspring.chapter6.part2.service.DummyMailSender;
+import com.example.studytobyspring.chapter6.part2.service.UserService;
+import com.example.studytobyspring.chapter6.part2.service.UserServiceImpl;
+import com.example.studytobyspring.chapter6.part2.service.UserServiceTx;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -45,6 +46,13 @@ public class Config {
         ds.setUrl("jdbc:h2:tcp://localhost/~/test");
         ds.setUsername("sa");
         return ds;
+    }
+
+    @Bean(name = "message")
+    public MessageFactoryBean message(){
+        MessageFactoryBean factory = new MessageFactoryBean();
+        factory.setText("Factory Bean");
+        return factory;
     }
 
 }

@@ -130,8 +130,6 @@ class UserServiceTest {
 
         try {
             assertThatThrownBy(() -> {
-                // fixme testUserService upgradeLevel 상속이 안되는 문제
-//                testUserService.upgradeLevels();
                 txUserService.upgradeLevels();
             }).isInstanceOf(TestUserServiceException.class);
         } catch (TestUserServiceException e) {
