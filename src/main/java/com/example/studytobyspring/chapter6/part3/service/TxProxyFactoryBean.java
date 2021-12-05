@@ -10,12 +10,16 @@ public class TxProxyFactoryBean implements FactoryBean<Object> {
     Object target;
     PlatformTransactionManager transactionManager;
     String pattern;
-    Class<?> serviceInterface;
+//  fixme  Class<?> serviceInterface;
+    UserService serviceInterface;
 
-    public TxProxyFactoryBean(Object target, PlatformTransactionManager transactionManager, String pattern, Class<?> serviceInterface) {
+    public TxProxyFactoryBean(Object target, PlatformTransactionManager transactionManager, String pattern) {
         this.target = target;
         this.transactionManager = transactionManager;
         this.pattern = pattern;
+    }
+
+    public void setServiceInterface(UserService serviceInterface) {
         this.serviceInterface = serviceInterface;
     }
 
@@ -25,14 +29,14 @@ public class TxProxyFactoryBean implements FactoryBean<Object> {
         TransactionHandler txHandler = new TransactionHandler(target, transactionManager, pattern);
         return Proxy.newProxyInstance((
                         getClass().getClassLoader()),
-                new Class[]{serviceInterface},
+                new Class[]{UserServiceImpl.class},
                 txHandler
         );
     }
 
     @Override
     public Class<?> getObjectType() {
-        return serviceInterface;
+        return UserService.class;
     }
 
     public boolean isSingleton(){

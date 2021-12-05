@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chpater6.learningTest.part2;
+package com.example.studytobyspring.chpater6.part1.learningTest.part2;
 
 import com.example.studytobyspring.chapter6.part2.bean.Message;
 import com.example.studytobyspring.chapter6.part2.config.Config;

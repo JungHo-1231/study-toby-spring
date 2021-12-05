@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chpater6.learningTest.part1;
+package com.example.studytobyspring.chpater6.part1.learningTest.part1;
 
 public interface Hello {
     String sayHello(String name);

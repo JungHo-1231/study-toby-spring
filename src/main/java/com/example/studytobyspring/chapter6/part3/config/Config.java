@@ -3,10 +3,7 @@ package com.example.studytobyspring.chapter6.part3.config;
 import com.example.studytobyspring.chapter6.part3.bean.MessageFactoryBean;
 import com.example.studytobyspring.chapter6.part3.dao.UserDao;
 import com.example.studytobyspring.chapter6.part3.dao.UserDaoJdbc;
-import com.example.studytobyspring.chapter6.part3.service.DummyMailSender;
-import com.example.studytobyspring.chapter6.part3.service.UserService;
-import com.example.studytobyspring.chapter6.part3.service.UserServiceImpl;
-import com.example.studytobyspring.chapter6.part3.service.UserServiceTx;
+import com.example.studytobyspring.chapter6.part3.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -35,8 +32,20 @@ public class Config {
     }
 
     @Bean
-    public UserService userService() {
-        return new UserServiceTx(new UserServiceImpl(userDao(), mailSender()), transactionManager());
+    public UserService userServiceTx() {
+        return new UserServiceTx(userService(), transactionManager());
+    }
+
+    @Bean
+    public UserServiceImpl userService() {
+        return new UserServiceImpl(userDao(), mailSender());
+    }
+
+    @Bean
+    public TxProxyFactoryBean txProxyFactoryBean() {
+        TxProxyFactoryBean tx = new TxProxyFactoryBean(userService(), transactionManager()
+                , "upgradeLevels");
+        return tx;
     }
 
     @Bean
@@ -49,7 +58,7 @@ public class Config {
     }
 
     @Bean(name = "message")
-    public MessageFactoryBean message(){
+    public MessageFactoryBean message() {
         MessageFactoryBean factory = new MessageFactoryBean();
         factory.setText("Factory Bean");
         return factory;

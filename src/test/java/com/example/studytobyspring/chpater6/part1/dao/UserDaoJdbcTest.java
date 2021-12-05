@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chpater6.dao;
+package com.example.studytobyspring.chpater6.part1.dao;
 
 import com.example.studytobyspring.chapter5.config.Config;
 import com.example.studytobyspring.chapter5.dao.Level;

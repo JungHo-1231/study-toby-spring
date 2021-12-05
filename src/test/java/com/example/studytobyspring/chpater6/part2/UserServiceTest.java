@@ -1,28 +1,30 @@
-package com.example.studytobyspring.chpater6.service;
+package com.example.studytobyspring.chpater6.part2;
 
-import com.example.studytobyspring.chapter6.part1.config.Config;
-import com.example.studytobyspring.chapter6.part1.dao.Level;
-import com.example.studytobyspring.chapter6.part1.dao.UserDao;
-import com.example.studytobyspring.chapter6.part1.doamin.User;
-import com.example.studytobyspring.chapter6.part1.service.UserService;
-import com.example.studytobyspring.chapter6.part1.service.UserServiceImpl;
-import com.example.studytobyspring.chapter6.part3.service.TransactionHandler;
+import com.example.studytobyspring.chapter6.part3.config.Config;
+import com.example.studytobyspring.chapter6.part3.dao.Level;
+import com.example.studytobyspring.chapter6.part3.dao.UserDao;
+import com.example.studytobyspring.chapter6.part3.doamin.User;
+import com.example.studytobyspring.chapter6.part3.service.TxProxyFactoryBean;
+import com.example.studytobyspring.chapter6.part3.service.UserService;
+import com.example.studytobyspring.chapter6.part3.service.UserServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.example.studytobyspring.chapter6.part1.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
 import static com.example.studytobyspring.chapter6.part1.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringJUnitConfig(Config.class)
 class UserServiceTest {
@@ -38,6 +40,8 @@ class UserServiceTest {
     PlatformTransactionManager transactionManager;
     @Autowired
     MailSender mailSender;
+    @Autowired
+    ApplicationContext applicationContext;
 
 
     @BeforeEach
@@ -111,16 +115,16 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeAllOrNothing() {
+    @DirtiesContext
+    void upgradeAllOrNothing() throws Exception {
 
         TestUserService testUserService = new TestUserService(userDao, transactionManager, users.get(3).getId(), mailSender);
-        TransactionHandler txHandler = new TransactionHandler(testUserService, transactionManager, "upgradeLevels");
 
-        UserService txUserService = (UserService) Proxy.newProxyInstance(
-                getClass().getClassLoader(),
-                new Class[]{UserService.class},
-                txHandler
-        );
+        TxProxyFactoryBean txProxyFactoryBean = applicationContext.getBean("&txProxyFactoryBean", TxProxyFactoryBean.class);
+        txProxyFactoryBean.setServiceInterface(testUserService);
+
+        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
+
 
         userDao.deleteAll();
 
