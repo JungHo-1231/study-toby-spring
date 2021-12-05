@@ -48,6 +48,7 @@ public class ReflectionTest {
         );
 
         assertThat(proxiedHello).isNotNull();
+        assertThat(proxiedHello.sayHello("jung")).isEqualTo("HEELO JUNG");
     }
 
 }

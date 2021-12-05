@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chpater6.learningTest.part2;
+package com.example.studytobyspring.chapter6.part3.service;
 
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;

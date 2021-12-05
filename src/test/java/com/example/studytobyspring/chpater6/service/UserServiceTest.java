@@ -6,7 +6,7 @@ import com.example.studytobyspring.chapter6.part1.dao.UserDao;
 import com.example.studytobyspring.chapter6.part1.doamin.User;
 import com.example.studytobyspring.chapter6.part1.service.UserService;
 import com.example.studytobyspring.chapter6.part1.service.UserServiceImpl;
-import com.example.studytobyspring.chpater6.learningTest.part2.TransactionHandler;
+import com.example.studytobyspring.chapter6.part3.service.TransactionHandler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
