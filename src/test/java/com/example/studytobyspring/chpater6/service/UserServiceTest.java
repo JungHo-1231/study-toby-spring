@@ -6,7 +6,7 @@ import com.example.studytobyspring.chapter6.part1.dao.UserDao;
 import com.example.studytobyspring.chapter6.part1.doamin.User;
 import com.example.studytobyspring.chapter6.part1.service.UserService;
 import com.example.studytobyspring.chapter6.part1.service.UserServiceImpl;
-import com.example.studytobyspring.chapter6.part1.service.UserServiceTx;
+import com.example.studytobyspring.chpater6.learningTest.part2.TransactionHandler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +16,13 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.example.studytobyspring.chapter6.part1.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
 import static com.example.studytobyspring.chapter6.part1.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringJUnitConfig(Config.class)
 class UserServiceTest {
@@ -57,7 +57,7 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeLevelTest() throws Exception{
+    void upgradeLevelTest() throws Exception {
         userDao.deleteAll();
         for (User user : users) {
             userDao.add(user);
@@ -111,9 +111,16 @@ class UserServiceTest {
     }
 
     @Test
-    void upgradeAllOrNothing() throws Exception {
+    void upgradeAllOrNothing() {
 
         TestUserService testUserService = new TestUserService(userDao, transactionManager, users.get(3).getId(), mailSender);
+        TransactionHandler txHandler = new TransactionHandler(testUserService, transactionManager, "upgradeLevels");
+
+        UserService txUserService = (UserService) Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[]{UserService.class},
+                txHandler
+        );
 
         userDao.deleteAll();
 
@@ -123,11 +130,12 @@ class UserServiceTest {
 
         try {
             assertThatThrownBy(() -> {
-                testUserService.upgradeLevel();
-            }).isInstanceOf(TestUserService.TestUserServiceException.class);
-        } catch (TestUserService.TestUserServiceException e) {
+                // fixme testUserService upgradeLevel 상속이 안되는 문제
+//                testUserService.upgradeLevels();
+                txUserService.upgradeLevels();
+            }).isInstanceOf(TestUserServiceException.class);
+        } catch (TestUserServiceException e) {
         }
-
         checkLevelUpgraded(users.get(1), false);
     }
 
@@ -141,28 +149,23 @@ class UserServiceTest {
     }
 
 
-    static class TestUserService extends UserServiceTx {
+    static class TestUserService extends UserServiceImpl {
         private String id;
         private UserDao userDao;
 
-        public TestUserService(UserDao userDao, PlatformTransactionManager platformTransactionManager, String id, MailSender mailSender) {
-            super(new UserServiceImpl(userDao, mailSender), platformTransactionManager);
+        private TestUserService(UserDao userDao, PlatformTransactionManager platformTransactionManager, String id, MailSender mailSender) {
+            super(userDao, mailSender);
             this.id = id;
             this.userDao = userDao;
         }
 
-        protected void upgradeLevel() {
-            List<User> all = userDao.getAll();
-            for (User user : all) {
-                if (user.getId().equals(this.id)) {
-                    throw new TestUserServiceException();
-                }
-            }
-            super.upgradeLevels();
+        protected void upgradeLevel(User user) {
+            if (user.getId().equals(this.id)) throw new TestUserServiceException();
+            super.upgradeLevel(user);
         }
+    }
 
-        class TestUserServiceException extends RuntimeException {
-        }
+    static class TestUserServiceException extends RuntimeException {
     }
 }
 

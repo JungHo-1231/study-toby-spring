@@ -40,9 +40,11 @@ public class TransactionHandler implements InvocationHandler {
             transactionManager.commit(status);
             return ret;
         } catch (InvocationTargetException e) {
+            transactionManager.rollback(status);
             e.printStackTrace();
             throw e.getTargetException();
         } catch (IllegalAccessException e) {
+            transactionManager.rollback(status);
             e.printStackTrace();
         }
         return null;
