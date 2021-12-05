@@ -119,7 +119,7 @@ class UserServiceTest {
     void upgradeAllOrNothing() throws Exception {
 
         TestUserService testUserService = new TestUserService(userDao, transactionManager, users.get(3).getId(), mailSender);
-
+        System.out.println("테스트 ");
         TxProxyFactoryBean txProxyFactoryBean = applicationContext.getBean("&txProxyFactoryBean", TxProxyFactoryBean.class);
         txProxyFactoryBean.setServiceInterface(testUserService);
 
