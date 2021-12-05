@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chpater6.learningTest;
+package com.example.studytobyspring.chpater6.learningTest.part1;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
-package com.example.studytobyspring.chapter6.doamin;
+package com.example.studytobyspring.chapter6.part1.doamin;
 
-import com.example.studytobyspring.chapter6.dao.Level;
+import com.example.studytobyspring.chapter6.part1.dao.Level;
 import lombok.*;
 
 @Getter @Setter @NoArgsConstructor

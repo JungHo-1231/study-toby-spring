@@ -1,12 +1,12 @@
 package com.example.studytobyspring.chpater6.service;
 
-import com.example.studytobyspring.chapter6.config.Config;
-import com.example.studytobyspring.chapter6.dao.Level;
-import com.example.studytobyspring.chapter6.dao.UserDao;
-import com.example.studytobyspring.chapter6.doamin.User;
-import com.example.studytobyspring.chapter6.service.UserService;
-import com.example.studytobyspring.chapter6.service.UserServiceImpl;
-import com.example.studytobyspring.chapter6.service.UserServiceTx;
+import com.example.studytobyspring.chapter6.part1.config.Config;
+import com.example.studytobyspring.chapter6.part1.dao.Level;
+import com.example.studytobyspring.chapter6.part1.dao.UserDao;
+import com.example.studytobyspring.chapter6.part1.doamin.User;
+import com.example.studytobyspring.chapter6.part1.service.UserService;
+import com.example.studytobyspring.chapter6.part1.service.UserServiceImpl;
+import com.example.studytobyspring.chapter6.part1.service.UserServiceTx;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +19,8 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.studytobyspring.chapter6.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
-import static com.example.studytobyspring.chapter6.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
+import static com.example.studytobyspring.chapter6.part1.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static com.example.studytobyspring.chapter6.part1.service.UserServiceImpl.MIN_RECCOMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

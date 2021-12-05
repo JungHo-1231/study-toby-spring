@@ -1,6 +1,6 @@
-package com.example.studytobyspring.chapter6.service;
+package com.example.studytobyspring.chapter6.part1.service;
 
-import com.example.studytobyspring.chapter6.doamin.User;
+import com.example.studytobyspring.chapter6.part1.doamin.User;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;

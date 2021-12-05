@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chapter6.dao;
+package com.example.studytobyspring.chapter6.part1.dao;
 
 public enum Level {
     GOLD(3, null), SILVER(2, GOLD), BASIC(1, SILVER);

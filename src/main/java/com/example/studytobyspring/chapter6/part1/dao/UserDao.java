@@ -1,7 +1,7 @@
-package com.example.studytobyspring.chapter6.dao;
+package com.example.studytobyspring.chapter6.part1.dao;
 
 
-import com.example.studytobyspring.chapter6.doamin.User;
+import com.example.studytobyspring.chapter6.part1.doamin.User;
 
 import java.util.List;
 

@@ -1,8 +1,11 @@
-package com.example.studytobyspring.chapter6.config;
+package com.example.studytobyspring.chapter6.part1.config;
 
-import com.example.studytobyspring.chapter6.dao.UserDao;
-import com.example.studytobyspring.chapter6.dao.UserDaoJdbc;
-import com.example.studytobyspring.chapter6.service.*;
+import com.example.studytobyspring.chapter6.part1.dao.UserDao;
+import com.example.studytobyspring.chapter6.part1.dao.UserDaoJdbc;
+import com.example.studytobyspring.chapter6.part1.service.DummyMailSender;
+import com.example.studytobyspring.chapter6.part1.service.UserService;
+import com.example.studytobyspring.chapter6.part1.service.UserServiceImpl;
+import com.example.studytobyspring.chapter6.part1.service.UserServiceTx;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;

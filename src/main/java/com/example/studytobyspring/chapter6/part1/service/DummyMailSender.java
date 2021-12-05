@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chapter6.service;
+package com.example.studytobyspring.chapter6.part1.service;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;

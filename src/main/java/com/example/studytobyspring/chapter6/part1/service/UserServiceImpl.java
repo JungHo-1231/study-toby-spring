@@ -1,8 +1,8 @@
-package com.example.studytobyspring.chapter6.service;
+package com.example.studytobyspring.chapter6.part1.service;
 
-import com.example.studytobyspring.chapter6.dao.Level;
-import com.example.studytobyspring.chapter6.dao.UserDao;
-import com.example.studytobyspring.chapter6.doamin.User;
+import com.example.studytobyspring.chapter6.part1.dao.Level;
+import com.example.studytobyspring.chapter6.part1.dao.UserDao;
+import com.example.studytobyspring.chapter6.part1.doamin.User;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 

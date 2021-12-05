@@ -1,4 +1,4 @@
-package com.example.studytobyspring.chapter6.dao;
+package com.example.studytobyspring.chapter6.part1.dao;
 
 
 import com.example.studytobyspring.chapter3.user.part1.dao.StatementStrategy;
