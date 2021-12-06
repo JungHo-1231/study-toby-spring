@@ -4,7 +4,10 @@ import com.example.studytobyspring.chpater6.part1.learningTest.part1.UppercaseHa
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 
 import java.lang.reflect.Proxy;
 import java.util.Locale;
@@ -14,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DynamicProxyTest {
 
     @Test
-    void simpleProxyTest() throws Exception{
+    void simpleProxyTest() throws Exception {
         Hello proxiedHello = (Hello) Proxy.newProxyInstance(
                 getClass().getClassLoader(),
                 new Class[]{Hello.class},
@@ -24,13 +27,67 @@ public class DynamicProxyTest {
     }
 
     @Test
-    void proxyFactoryBean() throws Exception{
+    void proxyFactoryBean() throws Exception {
         ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
         proxyFactoryBean.setTarget(new HelloTarget());
         proxyFactoryBean.addAdvice(new UppercaseAdvice());
 
         Hello proxiedHello = (Hello) proxyFactoryBean.getObject();
         assertThat(proxiedHello.sayHello("toby")).isEqualTo("HELLO TOBY");
+    }
+
+    @Test
+    void pointcutAdvisor() throws Exception {
+        ProxyFactoryBean pfBean = new ProxyFactoryBean();
+        pfBean.setTarget(new HelloTarget());
+
+        // 메서드 이름을 비교해서 대상을 선정하는 알고리즘을 제공하는 포인트 컷 생성
+        NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+        // 이름 조건 설정, sayH 로 시작하는 모든 메소드를 선택하게 한다.
+        pointcut.setMappedName("sayH*");
+
+        // 포인트 컷과 어드바이스를 advisor 로 묶어서 한 번에 추가
+        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+
+        Hello proxiedHello = (Hello) pfBean.getObject();
+        assertThat(proxiedHello.sayHi("toby")).isEqualTo("HI TOBY");
+        assertThat(proxiedHello.sayHello("toby")).isEqualTo("HELLO TOBY");
+        assertThat(proxiedHello.sayThankYou("toby")).isEqualTo("Thank You toby");
+    }
+
+    @Test
+    void classNamePointCutAdvisor() throws Exception {
+        NameMatchMethodPointcut classMethodPointCut = new NameMatchMethodPointcut();
+
+        classMethodPointCut.setClassFilter(
+                clazz -> clazz.getSimpleName().startsWith("HelloT")
+        );
+
+        classMethodPointCut.setMappedName("sayH*");
+
+
+        class HelloWorld extends HelloTarget {};
+        class HelloToby extends HelloTarget {};
+
+        // 테스트
+        checkAdviced(new HelloTarget(), classMethodPointCut, true);
+        checkAdviced(new HelloWorld(), classMethodPointCut,  false);
+        checkAdviced(new HelloToby(), classMethodPointCut, true);
+    }
+
+    private void checkAdviced(Object target, Pointcut pointcut, boolean adviced) {
+        ProxyFactoryBean pfBean = new ProxyFactoryBean();
+        pfBean.setTarget(target);
+        pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+        Hello proxiedHello = (Hello) pfBean.getObject();
+
+
+        if (adviced) {
+            assertThat(proxiedHello.sayHi("toby")).isEqualTo("HI TOBY");
+            assertThat(proxiedHello.sayHello("toby")).isEqualTo("HELLO TOBY");
+        } else {
+            assertThat(proxiedHello.sayThankYou("toby")).isEqualTo("Thank You toby");
+        }
     }
 
 
@@ -61,7 +118,7 @@ public class DynamicProxyTest {
 
         @Override
         public String sayHi(String name) {
-            return "Hi "  + name;
+            return "Hi " + name;
         }
 
         @Override
