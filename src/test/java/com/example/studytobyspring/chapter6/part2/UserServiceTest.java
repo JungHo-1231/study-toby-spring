@@ -1,15 +1,15 @@
-package com.example.studytobyspring.chpater6.part4;
+package com.example.studytobyspring.chapter6.part2;
 
+import com.example.studytobyspring.chapter6.part3.config.Config;
 import com.example.studytobyspring.chapter6.part3.dao.Level;
 import com.example.studytobyspring.chapter6.part3.dao.UserDao;
 import com.example.studytobyspring.chapter6.part3.doamin.User;
+import com.example.studytobyspring.chapter6.part3.service.TxProxyFactoryBean;
 import com.example.studytobyspring.chapter6.part3.service.UserService;
 import com.example.studytobyspring.chapter6.part3.service.UserServiceImpl;
-import com.example.studytobyspring.chapter6.part4.config.Config;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
@@ -120,8 +120,8 @@ class UserServiceTest {
 
         TestUserService testUserService = new TestUserService(userDao, transactionManager, users.get(3).getId(), mailSender);
         System.out.println("테스트 ");
-        ProxyFactoryBean txProxyFactoryBean = applicationContext.getBean("&userService", ProxyFactoryBean.class);
-        txProxyFactoryBean.setTarget(testUserService);
+        TxProxyFactoryBean txProxyFactoryBean = applicationContext.getBean("&txProxyFactoryBean", TxProxyFactoryBean.class);
+        txProxyFactoryBean.setServiceInterface(testUserService);
 
         UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 

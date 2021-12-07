@@ -1,15 +1,14 @@
-package com.example.studytobyspring.chpater6.part2;
+package com.example.studytobyspring.chapter6ForReview.part1;
 
-import com.example.studytobyspring.chapter6.part3.config.Config;
 import com.example.studytobyspring.chapter6.part3.dao.Level;
 import com.example.studytobyspring.chapter6.part3.dao.UserDao;
 import com.example.studytobyspring.chapter6.part3.doamin.User;
-import com.example.studytobyspring.chapter6.part3.service.TxProxyFactoryBean;
 import com.example.studytobyspring.chapter6.part3.service.UserService;
 import com.example.studytobyspring.chapter6.part3.service.UserServiceImpl;
-import org.assertj.core.api.Assertions;
+import com.example.studytobyspring.chapter6ForReview.part1.config.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailSender;
@@ -41,7 +40,7 @@ class UserServiceTest {
     @Autowired
     MailSender mailSender;
     @Autowired
-    ApplicationContext applicationContext;
+    ApplicationContext context;
 
 
     @BeforeEach
@@ -55,74 +54,18 @@ class UserServiceTest {
         );
     }
 
-    @Test
-    void bean() throws Exception {
-        Assertions.assertThat(userService).isNotNull();
-    }
-
-    @Test
-    void upgradeLevelTest() throws Exception {
-        userDao.deleteAll();
-        for (User user : users) {
-            userDao.add(user);
-        }
-
-        userService.upgradeLevels();
-
-        checkLevelUpgraded(users.get(0), false);
-        checkLevelUpgraded(users.get(1), true);
-        checkLevelUpgraded(users.get(2), false);
-        checkLevelUpgraded(users.get(3), true);
-        checkLevelUpgraded(users.get(4), false);
 
 
-    }
-
-    @Test
-    void add() throws Exception {
-        userDao.deleteAll();
-
-        User userWithLevel = users.get(4);
-        User userWithoutLevel = users.get(0);
-
-        userWithoutLevel.setLevel(null);
-
-        userService.add(userWithLevel);
-        userService.add(userWithoutLevel);
-
-        User userWithLevelRead = userDao.get(userWithLevel.getId());
-        User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
-
-        assertThat(userWithLevelRead.getLevel()).isEqualTo(userWithLevel.getLevel());
-        assertThat(userWithoutLevelRead.getLevel()).isEqualTo(Level.BASIC);
-    }
-
-    @Test
-    void upgradeLevels() throws Exception {
-        userDao.deleteAll();
-
-        for (User user : users) {
-            userDao.add(user);
-        }
-
-        userService.upgradeLevels();
-
-        checkLevelUpgraded(users.get(0), false);
-        checkLevelUpgraded(users.get(1), true);
-        checkLevelUpgraded(users.get(2), false);
-        checkLevelUpgraded(users.get(3), true);
-        checkLevelUpgraded(users.get(4), false);
-    }
 
     @Test
     @DirtiesContext
     void upgradeAllOrNothing() throws Exception {
 
-        TestUserService testUserService = new TestUserService(userDao, transactionManager, users.get(3).getId(), mailSender);
-        System.out.println("테스트 ");
-        TxProxyFactoryBean txProxyFactoryBean = applicationContext.getBean("&txProxyFactoryBean", TxProxyFactoryBean.class);
-        txProxyFactoryBean.setServiceInterface(testUserService);
 
+        TestUserService testUserService = new TestUserService(userDao, transactionManager, users.get(3).getId(), mailSender);
+
+        ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
+        txProxyFactoryBean.setTarget(testUserService);
         UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 
 
@@ -134,6 +77,7 @@ class UserServiceTest {
 
         try {
             assertThatThrownBy(() -> {
+//                txUserService.upgradeLevels();
                 txUserService.upgradeLevels();
             }).isInstanceOf(TestUserServiceException.class);
         } catch (TestUserServiceException e) {
