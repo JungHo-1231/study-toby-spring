@@ -6,9 +6,9 @@ import com.example.studytobyspring.chapter6.part3.service.DummyMailSender;
 import com.example.studytobyspring.chapter6.part3.service.UserServiceImpl;
 import com.example.studytobyspring.chapter6ForReview.part1.MessageFactoryBean;
 import com.example.studytobyspring.chapter6ForReview.part1.TransactionAdvice;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.aop.support.NameMatchMethodPointcut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -27,16 +27,23 @@ public class Config {
     }
 
     @Bean
+    public AspectJExpressionPointcut transactionPointcut(){
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+        pointcut.setExpression("execution(* *..*ServiceImpl.upgrade*(..))");
+        return pointcut;
+    }
+
+    @Bean
     public TransactionAdvice transactionAdvice() {
         return new TransactionAdvice(transactionManager());
     }
 
-    @Bean
-    public NameMatchMethodPointcut transactionPointcut() {
-        NameMatchMethodPointcut nameMatchMethodPointcut = new NameMatchMethodPointcut();
-        nameMatchMethodPointcut.setMappedName("upgrade*");
-        return nameMatchMethodPointcut;
-    }
+//    @Bean
+//    public NameMatchMethodPointcut transactionPointcut() {
+//        NameMatchMethodPointcut nameMatchMethodPointcut = new NameMatchMethodPointcut();
+//        nameMatchMethodPointcut.setMappedName("upgrade*");
+//        return nameMatchMethodPointcut;
+//    }
 
     @Bean
     public DefaultPointcutAdvisor transactionAdvisor() {

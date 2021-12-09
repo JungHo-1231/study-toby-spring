@@ -5,6 +5,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.Pointcut;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcut;
@@ -25,7 +26,7 @@ public class DynamicProxyTest {
     }
 
     @Test
-    void pointcutAdvisor() throws Exception{
+    void pointcutAdvisor() throws Exception {
         ProxyFactoryBean pfBean = new ProxyFactoryBean();
         pfBean.setTarget(new HelloTarget());
         NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
@@ -39,7 +40,7 @@ public class DynamicProxyTest {
     }
 
     @Test
-    void classNamePointcutAdvisor() throws Exception{
+    void classNamePointcutAdvisor() throws Exception {
         NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut();
         classMethodPointcut.setClassFilter(new ClassFilter() {
             @Override
@@ -50,10 +51,37 @@ public class DynamicProxyTest {
 
         classMethodPointcut.setMappedName("sayH*");
 
-        class HelloWorld extends HelloTarget{}
+        class HelloWorld extends HelloTarget {
+        }
 
         checkAdviced(new HelloTarget(), classMethodPointcut, true);
         checkAdviced(new HelloWorld(), classMethodPointcut, false);
+    }
+
+    @Test
+    void methodSignaturePointcut() throws Exception {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+        System.out.println("pointcut = " + pointcut);
+        pointcut.setExpression("execution(public int com.example.studytobyspring.chapter6ForReview.part2.Target.minus(int,int) throws java.lang.RuntimeException)");
+
+        // Target.minus()
+        assertThat(
+                pointcut.getClassFilter().matches(Target.class) &&
+                        pointcut.getMethodMatcher().matches(
+                                Target.class.getMethod("minus", int.class, int.class), null)).isTrue();
+
+        // Target.plus()
+        assertThat(
+                pointcut.getClassFilter().matches(Target.class) &&
+                        pointcut.getMethodMatcher().matches(
+                                Target.class.getMethod("plus", int.class, int.class), null)).isFalse();
+
+        // Bean.method();
+        assertThat(
+                pointcut.getClassFilter().matches(Bean.class) &&
+                        pointcut.getMethodMatcher().matches(
+                                Target.class.getMethod("method"), null)).isFalse();
+
     }
 
     private void checkAdviced(Object target, Pointcut pointcut, boolean adviced) {
